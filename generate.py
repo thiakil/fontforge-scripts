@@ -6,6 +6,7 @@ ttf2eot = CDLL('ttf2eot.dll')
 def GenerateFonts(junk, font):
 	#print os.path.dirname(font.path);
 	font_file_name = os.path.dirname(font.path) + '/' + font.fontname
+
 	font.generate(font_file_name + ".ttf");
 	font.generate(font_file_name + ".woff");
 	font.generate(font_file_name + ".svg");
@@ -48,7 +49,7 @@ def GenerateFonts(junk, font):
 
 	if 0xe000 in font:#dont bother if not icon based font!
 		f = open(font_file_name + ".html",'w')
-		htmlbase = "<style>"+base_font_face+"\n.fontdemo:before { display: inline; font-size: 40px; font-family: {fontname}; font-style: normal; }"
+		htmlbase = "<style>"+base_font_face+"\n.fontdemo:before { display: inline; font-size: 40px; font-family: {fontname}; font-style: normal; }\n"
 		htmlbase = htmlbase.replace("{fontname}", font.fontname)
 		htmlbase = htmlbase.replace("{gentime}", "%d" % gentime)
 		f.write(htmlbase)
@@ -59,5 +60,7 @@ def GenerateFonts(junk, font):
 	#write css file too
 	f = open(font_file_name + ".css",'w')
 	f.write(base_font_face.replace("{fontname}", font.fontname).replace("{gentime}", "%d" % gentime))
+
+	fontforge.postNotice("Finished", "Files have been output")
 
 fontforge.registerMenuItem(GenerateFonts,None,None,"Font",None,"Generate Webfonts");
