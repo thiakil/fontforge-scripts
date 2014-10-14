@@ -35,6 +35,17 @@ using std::vector;
 
 extern "C" { int __declspec(dllexport) __cdecl make_eot(char *infile, char *outfile); }
 
+void cleanup(FILE *input, FILE *output){
+    if (input){
+        fflush(input);
+        fclose(input);
+    }
+    if (output){
+        fflush(output);
+        fclose(output);
+    }
+}
+
 int __declspec(dllexport) __cdecl make_eot(char *infile, char *outfile)
 {
     const size_t kFontInitSize = 8192;
@@ -55,6 +66,7 @@ int __declspec(dllexport) __cdecl make_eot(char *infile, char *outfile)
         input = fopen(infile, "rb");
         if (input == NULL) {
             fprintf(stderr, "could not open input file %s, %m\n", infile);
+            cleanup(input, output);
             return 1;
         }
     }
@@ -65,12 +77,14 @@ int __declspec(dllexport) __cdecl make_eot(char *infile, char *outfile)
         output = fopen(outfile, "wb");
         if (output == NULL) {
             fprintf(stderr, "could not open output file %s, %m\n", outfile);
+            cleanup(input, output);
             return 1;
         }
     }
 
     if ((fontData = (unsigned char *) malloc(fontSize = kFontInitSize)) == NULL) {
         fprintf(stderr, "Allocation failure, %m\n");
+        cleanup(input, output);
         return 0;
     }
 
@@ -80,10 +94,12 @@ int __declspec(dllexport) __cdecl make_eot(char *infile, char *outfile)
             fontOff += ret;
             if ((fontData = (unsigned char *) realloc(fontData, fontSize *= 2)) == NULL) {
                 fprintf(stderr, "Allocation failure, %m\n");
+                cleanup(input, output);
                 return 0;
             }
         } else if (ret) {
             fprintf(stderr, "Too much data, %m\n");
+            cleanup(input, output);
             return 0;
         } else {
             fontData = (unsigned char *) realloc(fontData, fontSize = fontOff);
@@ -94,9 +110,11 @@ int __declspec(dllexport) __cdecl make_eot(char *infile, char *outfile)
     if (getEOTHeader(fontData, fontSize, eotHeader, overlayDst, overlaySrc, overlayLength)) {
         fwrite(&eotHeader[0], eotHeader.size(), 1, output);
         fwrite(fontData, fontSize, 1, output);
+        cleanup(input, output);
         return 1;
     } else {
         fprintf(stderr, "unknown error parsing input font, %m\n");
+        cleanup(input, output);
         return 0;
     }
 }
