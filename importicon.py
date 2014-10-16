@@ -5,7 +5,7 @@ scaledown = psMat.scale(0.999)
 
 def	importIcon(junk, font):
 	iconbase = 0xe000
-	while iconbase in font:
+	while iconbase in font and font[iconbase].isWorthOutputting():
 		iconbase += 1
 	svgfile = fontforge.openFilename("Select SVG file", "", "*.svg")
 	if svgfile:
