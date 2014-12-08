@@ -1,4 +1,4 @@
-import fontforge, os, time;
+import fontforge, os, time, re;
 #from ctypes import CDLL
 import struct
 
@@ -224,17 +224,20 @@ def GenerateFonts(junk, font):
 	#os.system("ttf2eot \""+ font_file_name + ".ttf" + "\" \"" + font_file_name + ".eot" + "\"");
 	generateEOT(font, font_file_name)
 
+	commentregex = re.compile(r"Use [A-F0-9]+ Instead")
+
 	css = ""
-	html = "<table width='100%'>"
+	html = "<!-- VERSION 2.0 --><table width='100%'>"
 	i=1
 	for glyph in font.glyphs():
-		css += '.%X:before { content: "\%X"; }\n' % (glyph.unicode, glyph.unicode)
-		if i % 4 == 1:
-			html += '<tr>'
-		html += '<td>%X <i class="fontdemo %X"></i></td>\n' % (glyph.unicode, glyph.unicode)
-		if i % 4 == 0:
-			html += '</tr>'
-		i += 1
+		if not commentregex.match(glyph.comment):
+			css += '.%X:before { content: "\%X"; }\n' % (glyph.unicode, glyph.unicode)
+			if i % 4 == 1:
+				html += '<tr>'
+			html += '<td>%X <i class="fontdemo %X"></i></td>\n' % (glyph.unicode, glyph.unicode)
+			if i % 4 == 0:
+				html += '</tr>'
+			i += 1
 	
 	gentime = time.time()
 
