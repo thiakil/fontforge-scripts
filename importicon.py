@@ -15,27 +15,27 @@ def	importIcon(junk, font):
 			newglyph.right_side_bearing = 0
 			newglyph.left_side_bearing = 0
 
-			boundingbox = newglyph.layers[1].boundingBox()
+			boundingbox = newglyph.boundingBox()
 			if boundingbox[2]-boundingbox[0] > 1000 or boundingbox[3]-boundingbox[1] > 1000:
 				print("bigger than 1000")
 				if boundingbox[2]-boundingbox[0] > boundingbox[3]-boundingbox[1]:
 					while boundingbox[2]-boundingbox[0] > 1000:
-						newglyph.transform(scaledown, ["round"])
-						boundingbox = newglyph.layers[1].boundingBox()
+						newglyph.transform(scaledown)
+						boundingbox = newglyph.boundingBox()
 				else:
 					while boundingbox[3]-boundingbox[1] > 1000:
-						newglyph.transform(scaledown, ["round"])
-						boundingbox = newglyph.layers[1].boundingBox()
-			elif boundingbox[2]-boundingbox[0] < 1000 or boundingbox[3]-boundingbox[1] < 1000:
+						newglyph.transform(scaledown)
+						boundingbox = newglyph.boundingBox()
+			elif boundingbox[2]-boundingbox[0] < 1000 and boundingbox[3]-boundingbox[1] < 1000:
 				print("smaller than 1000")
 				if boundingbox[2]-boundingbox[0] > boundingbox[3]-boundingbox[1]:
 					while boundingbox[2]-boundingbox[0] < 1000:
-						newglyph.transform(scaleup, ["round"])
-						boundingbox = newglyph.layers[1].boundingBox()
+						newglyph.transform(scaleup)
+						boundingbox = newglyph.boundingBox()
 				else:
 					while boundingbox[3]-boundingbox[1] < 1000:
-						newglyph.transform(scaleup, ["round"])
-						boundingbox = newglyph.layers[1].boundingBox()
+						newglyph.transform(scaleup)
+						boundingbox = newglyph.boundingBox()
 
 			newglyph.right_side_bearing = 0
 			newglyph.left_side_bearing = 0
