@@ -1,0 +1,5 @@
+url = "http://demo.syrahost.com/fontforge-scripts/generate.py"
+output = "generate.py"
+
+url = "http://demo.syrahost.com/fontforge-scripts/importicon.py"
+output = "importicon.py"
