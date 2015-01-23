@@ -1,5 +1,7 @@
 url = "http://demo.syrahost.com/fontforge-scripts/generate.py"
+time-cond = "generate.py"
 output = "generate.py"
 
 url = "http://demo.syrahost.com/fontforge-scripts/importicon.py"
+time-cond = "importicon.py"
 output = "importicon.py"
